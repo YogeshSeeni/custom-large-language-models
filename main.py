@@ -15,11 +15,12 @@ llm = initalize_llm()
 db = initialize_vector_database()
 
 with st.sidebar:
-    uploaded_files = st.file_uploader("Choose a PDF file", accept_multiple_files=True)
-    url = st.text_input('Enter URLs')
+    with st.form("my-form", clear_on_submit=True):
+        uploaded_files = st.file_uploader("Choose files", accept_multiple_files=True, type=["pdf","doc","docx","csv","md","xls","xlsx","json"])
+        url = st.text_input('Enter URL')
 
-    if st.button("Train", type="primary"):
-        print(url)
+        if st.form_submit_button("Train"):
+            print(url)
 
 # Initialize chat history
 if 'messages' not in st.session_state:
