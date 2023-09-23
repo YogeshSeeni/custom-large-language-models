@@ -1,7 +1,7 @@
 from langchain.llms import GPT4All
 from langchain.vectorstores import Chroma
 from langchain.embeddings import GPT4AllEmbeddings
-from langchain.document_loaders import WebBaseLoader
+from langchain.document_loaders import WebBaseLoader, UnstructuredPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
@@ -28,8 +28,13 @@ def add_website(url, db):
 
     db.add_documents(all_splits)
 
-def add_document(doc, db):
-    pass
+def add_pdf(doc, db):
+    loader = WebBaseLoader()
+    data = loader.load()
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=0)
+    all_splits = text_splitter.split_documents(data)
+
+    db.add_documents(all_splits)
 
 def pass_prompt(llm, query, db):
     print(query)

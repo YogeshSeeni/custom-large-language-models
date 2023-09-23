@@ -1,4 +1,5 @@
 import time
+import pathlib
 import streamlit as st
 from functions import initalize_llm, add_website, initialize_vector_database, pass_prompt
 # Custom image for the app icon and the assistant's avatar
@@ -14,13 +15,18 @@ st.set_page_config(
 llm = initalize_llm()
 db = initialize_vector_database()
 
+tmp_directory = "D:/Projects/Custom Large Language Models/tmp"
+
 with st.sidebar:
     with st.form("my-form", clear_on_submit=True):
-        uploaded_files = st.file_uploader("Choose files", accept_multiple_files=True, type=["pdf","doc","docx","csv","md","xls","xlsx","json"])
+        uploaded_files = st.file_uploader("Choose files", accept_multiple_files=True, type=["pdf","doc","docx"])
         url = st.text_input('Enter URL')
 
         if st.form_submit_button("Train"):
-            print(url)
+            for uploaded_file in uploaded_files:
+                save_path = pathlib.Path(tmp_directory, uploaded_file.name)
+                with open(save_path, mode="wb") as w:
+                    w.write(uploaded_file.getvalue())
 
 # Initialize chat history
 if 'messages' not in st.session_state:
